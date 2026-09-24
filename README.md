@@ -1,13 +1,16 @@
 # Supply Chain Analytics Control Tower
 
 [![CI](https://github.com/nawyaunnam/supply-chain-analytics-control-tower/actions/workflows/ci.yml/badge.svg)](https://github.com/nawyaunnam/supply-chain-analytics-control-tower/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/Python-3.11%E2%80%933.13-3776AB)
-![AWS](https://img.shields.io/badge/AWS-S3_%2B_Glue_%2B_Athena_%2B_Redshift-FF9900)
-![Power BI](https://img.shields.io/badge/Power_BI-PBIP_%2B_DAX-F2C811)
 
 A runnable supply-chain analytics portfolio that connects **supplier reliability, order service, inventory health and demand outlook**. It combines validated Python ingestion, AWS lake/warehouse assets, Airflow orchestration, tested dbt marts, statistical forecasting, explainable anomaly detection and Power BI project source.
 
 The local demo needs no cloud credentials. PostgreSQL is tested as a real warehouse target; DuckDB provides a fast local path. The AWS route uses S3 → Glue → Athena for exploration and Redshift → dbt for dimensional analytics. All published data is synthetic.
+
+![Service metrics from the local HTML preview](docs/demo/preview.png)
+
+Actual capture of the HTML preview using synthetic data, not a Power BI Desktop screenshot. [Open the complete preview locally](docs/demo/dashboard.html).
+
+A delivery can fill most units and still miss the customer's promise. The [order fact](dbt/models/marts/fct_order.sql) requires every non-cancelled line to arrive in full by its own promise date; the [metric tests](tests/test_metrics.py) cover split and late shipments. This keeps order OTIF separate from unit-weighted fill rate.
 
 ```mermaid
 flowchart LR
