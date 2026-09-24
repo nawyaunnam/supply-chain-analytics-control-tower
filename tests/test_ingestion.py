@@ -63,3 +63,24 @@ def test_no_future_delivery_observations(records):
     assert validate(records)
     as_of = max(r["snapshot_date"] for r in records["inventory"])
     assert all(r["delivered_date"] is None or r["delivered_date"] <= as_of for r in records["shipments"])
+
+
+def test_null_receipt_dates_retain_date_type(records, tmp_path):
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    for row in records["shipments"]:
+        row["delivered_date"] = None
+    batch = publish(records, tmp_path / "landing")
+    assert pa.types.is_date(pq.read_schema(batch / "shipments.parquet").field("delivered_date").type)
+
+
+def test_order_cannot_span_warehouses(records):
+    from copy import deepcopy
+
+    first = deepcopy(records["order_lines"][0])
+    first["line_id"] = "new-line"
+    first["warehouse_id"] = "W02" if first["warehouse_id"] != "W02" else "W01"
+    records["order_lines"].append(first)
+    with pytest.raises(ValueError, match="one warehouse"):
+        validate(records)

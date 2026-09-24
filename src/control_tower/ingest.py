@@ -93,13 +93,13 @@ def validate(data):
     return clean
 
 
-def publish(data, landing):
+def publish(data, landing, source_kind="imported"):
     data = validate(data)
     landing = Path(landing)
     landing.mkdir(parents=True, exist_ok=True)
     temp = Path(tempfile.mkdtemp(prefix=".batch-", dir=landing))
     try:
-        manifest = {"contract_version": 1, "files": {}}
+        manifest = {"contract_version": 1, "source_kind": source_kind, "files": {}}
         for name, rows in data.items():
             rows = sorted(rows, key=lambda r: tuple(r[k] for k in KEYS[name]))
             file = temp / f"{name}.parquet"

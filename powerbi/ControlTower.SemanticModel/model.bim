@@ -918,7 +918,7 @@
           },
           {
             "name": "Transit day standard deviation",
-            "expression": "STDEV.P(Shipments[transit_days])",
+            "expression": "STDEV.S(Shipments[transit_days])",
             "formatString": "0.0",
             "displayFolder": "Transport",
             "lineageTag": "3b6b4054-ffa0-5bb1-a6d9-f0a93cf98a93"
@@ -995,7 +995,7 @@
           },
           {
             "name": "Supplier lead standard deviation",
-            "expression": "STDEV.P('Supplier receipts'[actual_lead_days])",
+            "expression": "STDEV.S('Supplier receipts'[actual_lead_days])",
             "formatString": "0.0",
             "displayFolder": "Suppliers",
             "lineageTag": "1c720ad9-7dce-5820-a80a-a966348a0f15"

@@ -97,7 +97,7 @@ def fixture_data():
     return data
 
 
-def test_order_otif_and_weighted_fill_golden_case(tmp_path):
+def test_order_otif_and_weighted_fill_golden_case(tmp_path, monkeypatch):
     root = Path(__file__).resolve().parents[1]
     batch = publish(fixture_data(), tmp_path / "data/landing")
     load_batch(tmp_path, batch)
@@ -131,3 +131,32 @@ def test_order_otif_and_weighted_fill_golden_case(tmp_path):
         assert con.execute("select due from analytics.fct_order where order_id='O3'").fetchone()[0] == 0
         assert con.execute("select count(*) from analytics.fct_order where order_id='O4'").fetchone()[0] == 0
         assert con.execute("select sum(transport_cost) from analytics.fct_order_line").fetchone()[0] == 4
+
+    # PostgreSQL SUM(bigint) returns Decimal; emulate that driver behavior at the export boundary.
+    import json
+    from decimal import Decimal
+
+    from control_tower import report
+
+    original_execute = report.execute
+
+    class DecimalCursor:
+        def __init__(self, cursor):
+            self.cursor = cursor
+            self.description = cursor.description
+
+        def fetchall(self):
+            def convert(value):
+                if value == "P1":
+                    return "<sku&one>"
+                return Decimal(str(value)) if isinstance(value, (int, float)) else value
+
+            return [tuple(convert(value) for value in row) for row in self.cursor.fetchall()]
+
+    monkeypatch.setattr(report, "execute", lambda con, sql: DecimalCursor(original_execute(con, sql)))
+    report.export(tmp_path)
+    summary = json.loads((tmp_path / "artifacts/summary.json").read_text())
+    assert summary["first_dispatch_fill_rate"] == pytest.approx(0.72)
+    document = (tmp_path / "artifacts/dashboard.html").read_text()
+    assert "<sku&one>" not in document
+    assert "&lt;sku&amp;one&gt;" in document

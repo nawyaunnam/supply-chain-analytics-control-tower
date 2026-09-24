@@ -32,7 +32,7 @@ AVERAGE(Shipments[transit_days])
 
 // Transport
 Transit day standard deviation =
-STDEV.P(Shipments[transit_days])
+STDEV.S(Shipments[transit_days])
 
 // Inventory
 Ending inventory value =
@@ -76,7 +76,7 @@ AVERAGE('Supplier receipts'[lead_variance_days])
 
 // Suppliers
 Supplier lead standard deviation =
-STDEV.P('Supplier receipts'[actual_lead_days])
+STDEV.S('Supplier receipts'[actual_lead_days])
 
 // Forecasting
 Demand units =

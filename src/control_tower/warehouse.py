@@ -1,5 +1,6 @@
 """Bounded snapshot loading with atomic replacement. SQL identifiers are registry-controlled."""
 
+import json
 import os
 from contextlib import contextmanager
 from pathlib import Path
@@ -97,11 +98,23 @@ def sql_type(dtype):
 
 def load_batch(root, batch, target="local"):
     batch = Path(batch)
-    verify(batch)
+    manifest = verify(batch)
+
+    def record_source():
+        path = Path(root) / "data/active_source.json"
+        temp = path.with_suffix(".tmp")
+        temp.write_text(
+            json.dumps(
+                {"source_kind": manifest.get("source_kind", "unclassified"), "batch_id": manifest["batch_id"]}
+            )
+        )
+        temp.replace(path)
+
     if target == "redshift":
         from .cloud import load_redshift
 
         load_redshift(root, batch)
+        record_source()
         return
     with connect(root, target) as con:
         execute(con, "begin")
@@ -134,6 +147,8 @@ def load_batch(root, batch, target="local"):
         except Exception:
             con.rollback()
             raise
+
+    record_source()
 
 
 def read_table(root, target, name):

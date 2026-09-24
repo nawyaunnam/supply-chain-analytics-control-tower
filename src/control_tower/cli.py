@@ -30,7 +30,9 @@ def main():
             if args.command == "ingest"
             else generate(args.days, args.skus)
         )
-        batch = publish(data, root / "data/landing")
+        batch = publish(
+            data, root / "data/landing", source_kind="imported" if args.command == "ingest" else "synthetic"
+        )
         (root / "data/latest_batch.txt").write_text(str(batch))
         print(json.dumps({"batch": str(batch)}))
     if args.command in ["load", "demo"]:
