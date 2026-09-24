@@ -49,7 +49,7 @@ def export(root, target="local"):
     otif = ratio(sum(r["otif"] for r in orders), len(orders))
     fill = ratio(sum(r["first_dispatch_qty"] for r in orders), sum(r["ordered_qty"] for r in orders))
     inv = data["fct_inventory_daily"]
-    stockout = sum(r["stockout"] for r in inv) / len(inv)
+    stockout = ratio(sum(r["stockout"] for r in inv), len(inv))
     risk = sorted(data["mart_risk_queue"], key=lambda r: float(r["projected_shortfall"]), reverse=True)[:8]
     alerts = sorted(data["fct_anomalies"], key=lambda r: abs(float(r["robust_score"])), reverse=True)[:8]
     context_path = Path(root) / "data/active_source.json"
