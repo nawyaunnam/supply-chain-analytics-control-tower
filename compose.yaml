@@ -1,0 +1,39 @@
+services:
+  pipeline:
+    build: .
+    volumes: [tower-data:/opt/project/data, tower-artifacts:/opt/project/artifacts]
+  preview:
+    image: python:3.12-slim
+    command: [python, -m, http.server, '8082', --directory, /artifacts]
+    ports: ['127.0.0.1:8082:8082']
+    volumes: [tower-artifacts:/artifacts:ro]
+    depends_on:
+      pipeline: {condition: service_completed_successfully}
+  postgres:
+    profiles: [postgres]
+    image: postgres:16
+    environment:
+      POSTGRES_USER: tower
+      POSTGRES_DB: tower
+      POSTGRES_PASSWORD: ${PGPASSWORD:-local-demo-only}
+    ports: ['127.0.0.1:5433:5432']
+    volumes: [postgres-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U tower -d tower]
+      interval: 5s
+      retries: 12
+  airflow:
+    profiles: [airflow]
+    build: {context: ., dockerfile: Dockerfile.airflow}
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+      TOWER_TARGET: local
+    ports: ['127.0.0.1:8080:8080']
+    volumes: [airflow-data:/opt/project/data, airflow-artifacts:/opt/project/artifacts]
+volumes:
+  tower-data:
+  tower-artifacts:
+  postgres-data:
+  airflow-data:
+  airflow-artifacts:

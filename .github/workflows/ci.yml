@@ -1,0 +1,71 @@
+name: CI
+on: [push, pull_request]
+permissions: {contents: read}
+jobs:
+  analytics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12', cache: pip}
+      - run: pip install -e '.[dev]'
+      - run: ruff check src tests glue dags
+      - run: pytest -q
+      - run: tower demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: analytics-evidence
+          path: |
+            artifacts/
+            dbt/target/manifest.json
+            dbt/target/run_results.json
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: {POSTGRES_USER: tower, POSTGRES_PASSWORD: ci-local-only, POSTGRES_DB: tower}
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U tower" --health-interval 5s --health-retries 12
+    env:
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGUSER: tower
+      PGPASSWORD: ci-local-only
+      PGDATABASE: tower
+      POSTGRES_DSN: postgresql://tower:ci-local-only@localhost:5432/tower
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12', cache: pip}
+      - run: pip install .
+      - run: tower demo --target postgres --days 84 --skus 2
+  containers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose config --quiet
+      - run: docker build -t tower:ci .
+      - run: docker run --rm tower:ci tower demo --days 84 --skus 2
+      - run: docker build -f Dockerfile.airflow -t tower-airflow:ci .
+      - name: Airflow runtime DAG parsing
+        run: >-
+          docker run --rm --entrypoint /usr/local/bin/python tower-airflow:ci -c
+          "import runpy; d=runpy.run_path('/opt/airflow/dags/supply_control_tower.py')['dag']; assert len(d.tasks)==5; assert d.max_active_runs==1"
+  glue-spark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '17'}
+      - run: pip install pytest pyspark==3.5.4
+      - run: RUN_SPARK_TESTS=1 pytest -q tests/test_glue.py
+  powerbi-model:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: {dotnet-version: '8.0.x'}
+      - run: dotnet run --project tests/model_validation -- powerbi/ControlTower.SemanticModel/model.bim

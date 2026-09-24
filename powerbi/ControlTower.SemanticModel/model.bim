@@ -1,0 +1,1324 @@
+{
+  "name": "SupplyChainControlTower",
+  "compatibilityLevel": 1601,
+  "model": {
+    "culture": "en-US",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "discourageImplicitMeasures": true,
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "Warehouse",
+        "lineageTag": "25420bd4-b74d-5764-a806-0c45e15bca2e",
+        "columns": [
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "b40beb87-b919-5d0c-8235-9cbfc88da04a"
+          },
+          {
+            "name": "region",
+            "dataType": "string",
+            "sourceColumn": "region",
+            "summarizeBy": "none",
+            "lineageTag": "71c39ab1-6874-548b-a8d2-db9a2788b121"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Warehouse",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"dim_warehouse\"),Typed=Table.TransformColumnTypes(Source,{{\"warehouse_id\",type text}, {\"region\",type text}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Product",
+        "lineageTag": "058d01b7-6964-537c-b33f-9ea440b8cf34",
+        "columns": [
+          {
+            "name": "sku",
+            "dataType": "string",
+            "sourceColumn": "sku",
+            "summarizeBy": "none",
+            "lineageTag": "ca74973b-fef4-591b-875f-4de74b55ce7f"
+          },
+          {
+            "name": "supplier_id",
+            "dataType": "string",
+            "sourceColumn": "supplier_id",
+            "summarizeBy": "none",
+            "lineageTag": "5c2636ca-673d-5ebe-bf64-88119a85ddf6"
+          },
+          {
+            "name": "category",
+            "dataType": "string",
+            "sourceColumn": "category",
+            "summarizeBy": "none",
+            "lineageTag": "1f1abfda-cd06-5d52-bcc7-60f5debb2b4d"
+          },
+          {
+            "name": "unit_cost_cents",
+            "dataType": "int64",
+            "sourceColumn": "unit_cost_cents",
+            "summarizeBy": "none",
+            "lineageTag": "0f1a60f5-74a2-541f-9420-7e1c8f9d7421"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Product",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"dim_product\"),Typed=Table.TransformColumnTypes(Source,{{\"sku\",type text}, {\"supplier_id\",type text}, {\"category\",type text}, {\"unit_cost_cents\",Int64.Type}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Supplier",
+        "lineageTag": "1bfdb0c4-0426-5953-9b85-c277dc3bc465",
+        "columns": [
+          {
+            "name": "supplier_id",
+            "dataType": "string",
+            "sourceColumn": "supplier_id",
+            "summarizeBy": "none",
+            "lineageTag": "e34ffc2a-e0ac-5b0a-a384-887bcbe752fa"
+          },
+          {
+            "name": "supplier_name",
+            "dataType": "string",
+            "sourceColumn": "supplier_name",
+            "summarizeBy": "none",
+            "lineageTag": "e77c52ab-17a2-5618-8f37-22734b844f57"
+          },
+          {
+            "name": "region",
+            "dataType": "string",
+            "sourceColumn": "region",
+            "summarizeBy": "none",
+            "lineageTag": "f39bc7b1-2339-502a-99ed-198c74b4ba02"
+          },
+          {
+            "name": "target_lead_days",
+            "dataType": "int64",
+            "sourceColumn": "target_lead_days",
+            "summarizeBy": "none",
+            "lineageTag": "2dcbb5d2-896f-50e5-b05f-ea542ba1bb3c"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Supplier",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"dim_supplier\"),Typed=Table.TransformColumnTypes(Source,{{\"supplier_id\",type text}, {\"supplier_name\",type text}, {\"region\",type text}, {\"target_lead_days\",Int64.Type}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Date",
+        "lineageTag": "eac97fce-1200-5c96-a812-8084be6eff17",
+        "columns": [
+          {
+            "name": "date_day",
+            "dataType": "dateTime",
+            "sourceColumn": "date_day",
+            "summarizeBy": "none",
+            "lineageTag": "e5f14d76-cc55-5eb1-a956-f91abbd445cd",
+            "formatString": "yyyy-MM-dd",
+            "isKey": true
+          },
+          {
+            "name": "month",
+            "dataType": "dateTime",
+            "sourceColumn": "month",
+            "summarizeBy": "none",
+            "lineageTag": "f98ac25b-e3fd-5258-ad98-b480dafda153",
+            "formatString": "yyyy-MM-dd"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Date",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"dim_date\"),Typed=Table.TransformColumnTypes(Source,{{\"date_day\",type date}, {\"month\",type date}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Orders",
+        "lineageTag": "68f6b21a-5e8f-54f7-97ad-14539e7b089c",
+        "columns": [
+          {
+            "name": "order_id",
+            "dataType": "string",
+            "sourceColumn": "order_id",
+            "summarizeBy": "none",
+            "lineageTag": "5b98c852-817f-5bbc-9c59-f141b78cb6a9"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "71b3ad8b-8b7d-55ba-b59e-787ee3663039"
+          },
+          {
+            "name": "order_date",
+            "dataType": "dateTime",
+            "sourceColumn": "order_date",
+            "summarizeBy": "none",
+            "lineageTag": "1ea724db-ec64-5156-832c-776f93c2a894",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "promised_date",
+            "dataType": "dateTime",
+            "sourceColumn": "promised_date",
+            "summarizeBy": "none",
+            "lineageTag": "dbef6209-0736-5d69-a3cf-ad229546c88a",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "lines",
+            "dataType": "int64",
+            "sourceColumn": "lines",
+            "summarizeBy": "none",
+            "lineageTag": "be09a2e6-981d-58f2-b0e4-7e47da631f6f"
+          },
+          {
+            "name": "ordered_qty",
+            "dataType": "int64",
+            "sourceColumn": "ordered_qty",
+            "summarizeBy": "none",
+            "lineageTag": "1b242ba9-0765-5d9f-94f7-6c254377d0f2"
+          },
+          {
+            "name": "first_dispatch_qty",
+            "dataType": "int64",
+            "sourceColumn": "first_dispatch_qty",
+            "summarizeBy": "none",
+            "lineageTag": "85267539-0f51-5a56-9093-b0f44268f7a2"
+          },
+          {
+            "name": "delivered_qty",
+            "dataType": "int64",
+            "sourceColumn": "delivered_qty",
+            "summarizeBy": "none",
+            "lineageTag": "e0e564e9-693c-53a6-af4d-adb4658b1fa6"
+          },
+          {
+            "name": "due",
+            "dataType": "int64",
+            "sourceColumn": "due",
+            "summarizeBy": "none",
+            "lineageTag": "75feb158-6840-5262-8721-893305cc193f"
+          },
+          {
+            "name": "otif",
+            "dataType": "int64",
+            "sourceColumn": "otif",
+            "summarizeBy": "none",
+            "lineageTag": "1a055849-2e22-5583-91b1-ee75c3b9581a"
+          },
+          {
+            "name": "transport_cost",
+            "dataType": "double",
+            "sourceColumn": "transport_cost",
+            "summarizeBy": "none",
+            "lineageTag": "5b81947c-b933-5a2c-88b4-467119a84e50"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Orders",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"fct_order\"),Typed=Table.TransformColumnTypes(Source,{{\"order_id\",type text}, {\"warehouse_id\",type text}, {\"order_date\",type date}, {\"promised_date\",type date}, {\"lines\",Int64.Type}, {\"ordered_qty\",Int64.Type}, {\"first_dispatch_qty\",Int64.Type}, {\"delivered_qty\",Int64.Type}, {\"due\",Int64.Type}, {\"otif\",Int64.Type}, {\"transport_cost\",type number}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Inventory",
+        "lineageTag": "9123d3c2-eb98-5bc4-8518-27b4a01c033c",
+        "columns": [
+          {
+            "name": "sku",
+            "dataType": "string",
+            "sourceColumn": "sku",
+            "summarizeBy": "none",
+            "lineageTag": "576fedda-5674-5918-bdf9-d8c3ac82b967"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "378071f2-432b-5076-84ed-d81a5fd9242c"
+          },
+          {
+            "name": "snapshot_date",
+            "dataType": "dateTime",
+            "sourceColumn": "snapshot_date",
+            "summarizeBy": "none",
+            "lineageTag": "9969adff-d81f-5776-b23e-f3fc948d035a",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "opening_qty",
+            "dataType": "int64",
+            "sourceColumn": "opening_qty",
+            "summarizeBy": "none",
+            "lineageTag": "a4f16f93-d503-5822-812e-39148f20f2fa"
+          },
+          {
+            "name": "received_qty",
+            "dataType": "int64",
+            "sourceColumn": "received_qty",
+            "summarizeBy": "none",
+            "lineageTag": "a9b6462a-bb50-5e6c-aa72-3df669131962"
+          },
+          {
+            "name": "shipped_qty",
+            "dataType": "int64",
+            "sourceColumn": "shipped_qty",
+            "summarizeBy": "none",
+            "lineageTag": "de02edc1-c871-55f1-9210-7f48016db52a"
+          },
+          {
+            "name": "on_hand_qty",
+            "dataType": "int64",
+            "sourceColumn": "on_hand_qty",
+            "summarizeBy": "none",
+            "lineageTag": "424738c8-4814-5172-98bb-43155ba42eb1"
+          },
+          {
+            "name": "reserved_qty",
+            "dataType": "int64",
+            "sourceColumn": "reserved_qty",
+            "summarizeBy": "none",
+            "lineageTag": "c7eea9b1-feed-5029-b2af-4223e9da1e58"
+          },
+          {
+            "name": "safety_stock",
+            "dataType": "int64",
+            "sourceColumn": "safety_stock",
+            "summarizeBy": "none",
+            "lineageTag": "425f3c23-b548-5fa2-83b2-eea4c11f71d8"
+          },
+          {
+            "name": "available_qty",
+            "dataType": "int64",
+            "sourceColumn": "available_qty",
+            "summarizeBy": "none",
+            "lineageTag": "5bcc6411-075a-535b-b0ec-84af1a534a1a"
+          },
+          {
+            "name": "inventory_value",
+            "dataType": "double",
+            "sourceColumn": "inventory_value",
+            "summarizeBy": "none",
+            "lineageTag": "1591333d-a732-5b34-a2af-98fb7c10dda0"
+          },
+          {
+            "name": "shipped_cogs",
+            "dataType": "double",
+            "sourceColumn": "shipped_cogs",
+            "summarizeBy": "none",
+            "lineageTag": "949abc1b-069f-5009-bfbc-40e0c0d0d525"
+          },
+          {
+            "name": "stockout",
+            "dataType": "int64",
+            "sourceColumn": "stockout",
+            "summarizeBy": "none",
+            "lineageTag": "a1a4d6c4-1ce1-5e55-8143-9b93066f141f"
+          },
+          {
+            "name": "below_safety",
+            "dataType": "int64",
+            "sourceColumn": "below_safety",
+            "summarizeBy": "none",
+            "lineageTag": "e9589c24-fe83-5e0e-a75c-b607fee8148c"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Inventory",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"fct_inventory_daily\"),Typed=Table.TransformColumnTypes(Source,{{\"sku\",type text}, {\"warehouse_id\",type text}, {\"snapshot_date\",type date}, {\"opening_qty\",Int64.Type}, {\"received_qty\",Int64.Type}, {\"shipped_qty\",Int64.Type}, {\"on_hand_qty\",Int64.Type}, {\"reserved_qty\",Int64.Type}, {\"safety_stock\",Int64.Type}, {\"available_qty\",Int64.Type}, {\"inventory_value\",type number}, {\"shipped_cogs\",type number}, {\"stockout\",Int64.Type}, {\"below_safety\",Int64.Type}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Demand",
+        "lineageTag": "f0a19132-e0aa-548e-b2f5-d217f5291ddc",
+        "columns": [
+          {
+            "name": "sku",
+            "dataType": "string",
+            "sourceColumn": "sku",
+            "summarizeBy": "none",
+            "lineageTag": "18614494-dc6f-5ba8-81ec-352fa864eb64"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "696bae21-26c0-599b-97dc-aa15994d7e4c"
+          },
+          {
+            "name": "date_day",
+            "dataType": "dateTime",
+            "sourceColumn": "date_day",
+            "summarizeBy": "none",
+            "lineageTag": "0f1be056-e893-5d9a-9aeb-67ccf3707851",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "demand_qty",
+            "dataType": "int64",
+            "sourceColumn": "demand_qty",
+            "summarizeBy": "none",
+            "lineageTag": "2d6d0f2e-57dd-52e5-a245-293d9caed394"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Demand",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"fct_demand_daily\"),Typed=Table.TransformColumnTypes(Source,{{\"sku\",type text}, {\"warehouse_id\",type text}, {\"date_day\",type date}, {\"demand_qty\",Int64.Type}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Shipments",
+        "lineageTag": "22311c65-7eb6-5a2c-bb41-630ae3d50685",
+        "columns": [
+          {
+            "name": "shipment_id",
+            "dataType": "string",
+            "sourceColumn": "shipment_id",
+            "summarizeBy": "none",
+            "lineageTag": "6667b2f9-3e5c-5ef7-bf76-41e99106ee07"
+          },
+          {
+            "name": "line_id",
+            "dataType": "string",
+            "sourceColumn": "line_id",
+            "summarizeBy": "none",
+            "lineageTag": "c78b66f9-b3e7-5830-96e0-8e6943ca9dc7"
+          },
+          {
+            "name": "shipped_date",
+            "dataType": "dateTime",
+            "sourceColumn": "shipped_date",
+            "summarizeBy": "none",
+            "lineageTag": "34e8bfe1-28ed-5c12-8dc2-19ea50f73ef7",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "delivered_date",
+            "dataType": "dateTime",
+            "sourceColumn": "delivered_date",
+            "summarizeBy": "none",
+            "lineageTag": "36554f95-9650-59b8-8907-bb0091ad52c7",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "shipped_qty",
+            "dataType": "int64",
+            "sourceColumn": "shipped_qty",
+            "summarizeBy": "none",
+            "lineageTag": "7bfb0d15-d586-5b70-9d91-dbd5dd48c6f2"
+          },
+          {
+            "name": "transport_cost_cents",
+            "dataType": "int64",
+            "sourceColumn": "transport_cost_cents",
+            "summarizeBy": "none",
+            "lineageTag": "c79bf36f-3150-538a-9e4b-ea8206b45845"
+          },
+          {
+            "name": "carrier",
+            "dataType": "string",
+            "sourceColumn": "carrier",
+            "summarizeBy": "none",
+            "lineageTag": "e332ec42-692b-519f-9501-7372f62885a8"
+          },
+          {
+            "name": "sku",
+            "dataType": "string",
+            "sourceColumn": "sku",
+            "summarizeBy": "none",
+            "lineageTag": "3c3d50a7-0d0e-5dcc-8d9d-89fefa5d3337"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "147da172-26ae-5783-860c-76c25c395a1b"
+          },
+          {
+            "name": "order_id",
+            "dataType": "string",
+            "sourceColumn": "order_id",
+            "summarizeBy": "none",
+            "lineageTag": "d2895b38-46b1-599e-af9e-3bbb1ba43af7"
+          },
+          {
+            "name": "transport_cost",
+            "dataType": "double",
+            "sourceColumn": "transport_cost",
+            "summarizeBy": "none",
+            "lineageTag": "6f551c1a-acb7-5da2-8d06-5befbf1eb6e2"
+          },
+          {
+            "name": "transit_days",
+            "dataType": "int64",
+            "sourceColumn": "transit_days",
+            "summarizeBy": "none",
+            "lineageTag": "842adc9d-d806-5f35-aa8f-d157b20e445e"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Shipments",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"fct_shipment\"),Typed=Table.TransformColumnTypes(Source,{{\"shipment_id\",type text}, {\"line_id\",type text}, {\"shipped_date\",type date}, {\"delivered_date\",type date}, {\"shipped_qty\",Int64.Type}, {\"transport_cost_cents\",Int64.Type}, {\"carrier\",type text}, {\"sku\",type text}, {\"warehouse_id\",type text}, {\"order_id\",type text}, {\"transport_cost\",type number}, {\"transit_days\",Int64.Type}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Supplier receipts",
+        "lineageTag": "efdef86b-4f74-563d-a3be-3c38abc1a1ad",
+        "columns": [
+          {
+            "name": "po_id",
+            "dataType": "string",
+            "sourceColumn": "po_id",
+            "summarizeBy": "none",
+            "lineageTag": "89dd8b2e-ff88-52b8-b1aa-1fa13d29cd72"
+          },
+          {
+            "name": "sku",
+            "dataType": "string",
+            "sourceColumn": "sku",
+            "summarizeBy": "none",
+            "lineageTag": "166cde43-c850-57d7-b588-7e514b6b3cc1"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "5612fa45-0e13-550e-94b8-d2ab958c264b"
+          },
+          {
+            "name": "supplier_id",
+            "dataType": "string",
+            "sourceColumn": "supplier_id",
+            "summarizeBy": "none",
+            "lineageTag": "1b2c10b4-ff3c-5ca3-81c8-4bddb360c833"
+          },
+          {
+            "name": "placed_date",
+            "dataType": "dateTime",
+            "sourceColumn": "placed_date",
+            "summarizeBy": "none",
+            "lineageTag": "b9db8ed2-c35c-57a8-92fe-bf88126821e5",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "expected_date",
+            "dataType": "dateTime",
+            "sourceColumn": "expected_date",
+            "summarizeBy": "none",
+            "lineageTag": "44d65c95-f173-5348-8705-2ad9b46c7ac0",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "received_date",
+            "dataType": "dateTime",
+            "sourceColumn": "received_date",
+            "summarizeBy": "none",
+            "lineageTag": "5775f6d5-c252-50f7-ab3d-3e64d89b68f5",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "ordered_qty",
+            "dataType": "int64",
+            "sourceColumn": "ordered_qty",
+            "summarizeBy": "none",
+            "lineageTag": "abde7cc5-da8c-5dbf-856c-bdcfe20adcdf"
+          },
+          {
+            "name": "received_qty",
+            "dataType": "int64",
+            "sourceColumn": "received_qty",
+            "summarizeBy": "none",
+            "lineageTag": "a6fe3ca7-fb9f-5bb5-825c-1fd807a7bcb5"
+          },
+          {
+            "name": "actual_lead_days",
+            "dataType": "int64",
+            "sourceColumn": "actual_lead_days",
+            "summarizeBy": "none",
+            "lineageTag": "12c9a7ab-08dc-523d-9299-c4a5dd67b36f"
+          },
+          {
+            "name": "lead_variance_days",
+            "dataType": "int64",
+            "sourceColumn": "lead_variance_days",
+            "summarizeBy": "none",
+            "lineageTag": "d1ce7a39-3c0f-5a34-a31b-2763d211dc9b"
+          },
+          {
+            "name": "due",
+            "dataType": "int64",
+            "sourceColumn": "due",
+            "summarizeBy": "none",
+            "lineageTag": "d5e00229-301c-5e12-b298-20c5d28ecce2"
+          },
+          {
+            "name": "supplier_otif",
+            "dataType": "int64",
+            "sourceColumn": "supplier_otif",
+            "summarizeBy": "none",
+            "lineageTag": "f5feb43d-841a-54c8-a14e-96ade907d0b2"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Supplier receipts",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"fct_supplier_receipt\"),Typed=Table.TransformColumnTypes(Source,{{\"po_id\",type text}, {\"sku\",type text}, {\"warehouse_id\",type text}, {\"supplier_id\",type text}, {\"placed_date\",type date}, {\"expected_date\",type date}, {\"received_date\",type date}, {\"ordered_qty\",Int64.Type}, {\"received_qty\",Int64.Type}, {\"actual_lead_days\",Int64.Type}, {\"lead_variance_days\",Int64.Type}, {\"due\",Int64.Type}, {\"supplier_otif\",Int64.Type}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Forecasts",
+        "lineageTag": "3a7fd251-41ab-5c2a-a92d-26f721479e49",
+        "columns": [
+          {
+            "name": "sku",
+            "dataType": "string",
+            "sourceColumn": "sku",
+            "summarizeBy": "none",
+            "lineageTag": "8224b06d-d16c-5edb-a4b3-9588c8ba9b14"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "e0ecd5de-dcec-560f-99b7-80fed87f54ec"
+          },
+          {
+            "name": "forecast_date",
+            "dataType": "dateTime",
+            "sourceColumn": "forecast_date",
+            "summarizeBy": "none",
+            "lineageTag": "1e2f9720-4e8d-5e67-b64b-8e0a7d94f499",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "training_cutoff",
+            "dataType": "dateTime",
+            "sourceColumn": "training_cutoff",
+            "summarizeBy": "none",
+            "lineageTag": "0b010844-f0c3-5f73-8899-8b423ff0d83f",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "model",
+            "dataType": "string",
+            "sourceColumn": "model",
+            "summarizeBy": "none",
+            "lineageTag": "cc675c60-5e6c-50b7-ac92-4f181f82ad1b"
+          },
+          {
+            "name": "predicted_qty",
+            "dataType": "double",
+            "sourceColumn": "predicted_qty",
+            "summarizeBy": "none",
+            "lineageTag": "fae2a76f-c040-5020-996b-f93f9cc1aad3"
+          },
+          {
+            "name": "lower_qty",
+            "dataType": "double",
+            "sourceColumn": "lower_qty",
+            "summarizeBy": "none",
+            "lineageTag": "292aa682-8d48-5579-b505-62f166767d40"
+          },
+          {
+            "name": "upper_qty",
+            "dataType": "double",
+            "sourceColumn": "upper_qty",
+            "summarizeBy": "none",
+            "lineageTag": "db7d7bc9-6b91-529f-97a6-4cca5d52b5e3"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Forecasts",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"fct_forecasts\"),Typed=Table.TransformColumnTypes(Source,{{\"sku\",type text}, {\"warehouse_id\",type text}, {\"forecast_date\",type date}, {\"training_cutoff\",type date}, {\"model\",type text}, {\"predicted_qty\",type number}, {\"lower_qty\",type number}, {\"upper_qty\",type number}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Backtests",
+        "lineageTag": "f12dd1cf-5a6b-51e8-8675-8cad3f9ea396",
+        "columns": [
+          {
+            "name": "sku",
+            "dataType": "string",
+            "sourceColumn": "sku",
+            "summarizeBy": "none",
+            "lineageTag": "4287c58c-17a3-5620-b956-e7c4cfa9f09d"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "a618dd4a-23ed-57be-b428-2334978164d2"
+          },
+          {
+            "name": "origin_date",
+            "dataType": "dateTime",
+            "sourceColumn": "origin_date",
+            "summarizeBy": "none",
+            "lineageTag": "5d2891aa-e1e6-58ef-a220-77018907daf8",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "target_date",
+            "dataType": "dateTime",
+            "sourceColumn": "target_date",
+            "summarizeBy": "none",
+            "lineageTag": "28264aec-7639-51a0-a9f9-03d2aa20fdd1",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "model",
+            "dataType": "string",
+            "sourceColumn": "model",
+            "summarizeBy": "none",
+            "lineageTag": "601c8b1b-da82-579e-8158-81c08966c96b"
+          },
+          {
+            "name": "predicted_qty",
+            "dataType": "double",
+            "sourceColumn": "predicted_qty",
+            "summarizeBy": "none",
+            "lineageTag": "c38f5d5e-bcf7-5e62-a0b3-0cb8d6f0380d"
+          },
+          {
+            "name": "actual_qty",
+            "dataType": "double",
+            "sourceColumn": "actual_qty",
+            "summarizeBy": "none",
+            "lineageTag": "e6196a40-3cb4-5057-ab88-e31bc40e948e"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Backtests",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"fct_backtests\"),Typed=Table.TransformColumnTypes(Source,{{\"sku\",type text}, {\"warehouse_id\",type text}, {\"origin_date\",type date}, {\"target_date\",type date}, {\"model\",type text}, {\"predicted_qty\",type number}, {\"actual_qty\",type number}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Anomalies",
+        "lineageTag": "e444f4be-3c58-55ee-8713-ba6ced027aae",
+        "columns": [
+          {
+            "name": "sku",
+            "dataType": "string",
+            "sourceColumn": "sku",
+            "summarizeBy": "none",
+            "lineageTag": "d351daff-677a-53d4-91a4-3e664618082c"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id",
+            "summarizeBy": "none",
+            "lineageTag": "73176ebb-0133-5118-8c92-e6ca02faf491"
+          },
+          {
+            "name": "date_day",
+            "dataType": "dateTime",
+            "sourceColumn": "date_day",
+            "summarizeBy": "none",
+            "lineageTag": "fa4c0955-287f-518e-a253-d2edf439a393",
+            "formatString": "yyyy-MM-dd"
+          },
+          {
+            "name": "metric",
+            "dataType": "string",
+            "sourceColumn": "metric",
+            "summarizeBy": "none",
+            "lineageTag": "2a07fb1b-cce6-5665-b6c5-ef799d98b239"
+          },
+          {
+            "name": "observed",
+            "dataType": "double",
+            "sourceColumn": "observed",
+            "summarizeBy": "none",
+            "lineageTag": "cf3c3ace-46df-5c36-8112-01722dab2b14"
+          },
+          {
+            "name": "expected",
+            "dataType": "double",
+            "sourceColumn": "expected",
+            "summarizeBy": "none",
+            "lineageTag": "aa4cb419-8891-57de-9a4e-2237224271dd"
+          },
+          {
+            "name": "robust_score",
+            "dataType": "double",
+            "sourceColumn": "robust_score",
+            "summarizeBy": "none",
+            "lineageTag": "fc834345-8197-58c9-af71-79a673189c5a"
+          },
+          {
+            "name": "severity",
+            "dataType": "string",
+            "sourceColumn": "severity",
+            "summarizeBy": "none",
+            "lineageTag": "39c99aea-6f11-5e9e-826a-d61a45ce55bb"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Anomalies",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source=LoadMart(\"fct_anomalies\"),Typed=Table.TransformColumnTypes(Source,{{\"sku\",type text}, {\"warehouse_id\",type text}, {\"date_day\",type date}, {\"metric\",type text}, {\"observed\",type number}, {\"expected\",type number}, {\"robust_score\",type number}, {\"severity\",type text}},\"en-US\") in Typed"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Metrics",
+        "columns": [
+          {
+            "name": "Value",
+            "dataType": "int64",
+            "sourceColumn": "Value",
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Metrics",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "#table(type table [Value=Int64.Type],{{1}})"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Due orders",
+            "expression": "CALCULATE(COUNTROWS(Orders),Orders[due]=1)",
+            "formatString": "#,0",
+            "displayFolder": "Service",
+            "lineageTag": "3dc2c123-a564-5cb3-b892-b17f74960c43"
+          },
+          {
+            "name": "OTIF orders",
+            "expression": "CALCULATE(SUM(Orders[otif]),Orders[due]=1)",
+            "formatString": "#,0",
+            "displayFolder": "Service",
+            "lineageTag": "cd35f282-d8e0-5900-bff9-a45cd6b9d9ba"
+          },
+          {
+            "name": "OTIF",
+            "expression": "DIVIDE([OTIF orders],[Due orders])",
+            "formatString": "0.0%",
+            "displayFolder": "Service",
+            "lineageTag": "e0630acd-0c55-5666-95b1-aba3c71b99fe"
+          },
+          {
+            "name": "First dispatch fill rate",
+            "expression": "DIVIDE(CALCULATE(SUM(Orders[first_dispatch_qty]),Orders[due]=1), CALCULATE(SUM(Orders[ordered_qty]),Orders[due]=1))",
+            "formatString": "0.0%",
+            "displayFolder": "Service",
+            "lineageTag": "cce5d4ba-19da-5b33-9f1e-264993681aa5"
+          },
+          {
+            "name": "Open due orders",
+            "expression": "CALCULATE(COUNTROWS(Orders),FILTER(Orders,Orders[due]=1 && Orders[delivered_qty]<Orders[ordered_qty]))",
+            "formatString": "#,0",
+            "displayFolder": "Service",
+            "lineageTag": "daa95d0c-1832-5530-9443-57bacd25cb47"
+          },
+          {
+            "name": "Transportation cost",
+            "expression": "SUM(Shipments[transport_cost])",
+            "formatString": "$#,0",
+            "displayFolder": "Transport",
+            "lineageTag": "87c1916e-27f3-5986-8758-c33abb1cc44c"
+          },
+          {
+            "name": "Cost per shipped unit",
+            "expression": "DIVIDE([Transportation cost],SUM(Shipments[shipped_qty]))",
+            "formatString": "$0.00",
+            "displayFolder": "Transport",
+            "lineageTag": "82164027-bb85-5fa3-afa4-49081645d1d7"
+          },
+          {
+            "name": "Average transit days",
+            "expression": "AVERAGE(Shipments[transit_days])",
+            "formatString": "0.0",
+            "displayFolder": "Transport",
+            "lineageTag": "4c57ef0f-dea2-5528-b7b8-5159534b6811"
+          },
+          {
+            "name": "Transit day standard deviation",
+            "expression": "STDEV.P(Shipments[transit_days])",
+            "formatString": "0.0",
+            "displayFolder": "Transport",
+            "lineageTag": "3b6b4054-ffa0-5bb1-a6d9-f0a93cf98a93"
+          },
+          {
+            "name": "Ending inventory value",
+            "expression": "VAR LastDate=MAX(Inventory[snapshot_date]) RETURN CALCULATE(SUM(Inventory[inventory_value]),KEEPFILTERS(Inventory[snapshot_date]=LastDate))",
+            "formatString": "$#,0",
+            "displayFolder": "Inventory",
+            "lineageTag": "e449802c-4388-59b4-b813-918416447b22"
+          },
+          {
+            "name": "Average daily inventory value",
+            "expression": "AVERAGEX(VALUES('Date'[date_day]),CALCULATE(SUM(Inventory[inventory_value])))",
+            "formatString": "$#,0",
+            "displayFolder": "Inventory",
+            "lineageTag": "89cce71d-0133-5712-a488-14e83619fcaa"
+          },
+          {
+            "name": "Period inventory turnover",
+            "expression": "DIVIDE(SUM(Inventory[shipped_cogs]),[Average daily inventory value])",
+            "formatString": "0.00x",
+            "displayFolder": "Inventory",
+            "lineageTag": "ae31234c-ad08-58a7-a618-09d3ea28ca31"
+          },
+          {
+            "name": "Stockout SKU-days",
+            "expression": "SUM(Inventory[stockout])",
+            "formatString": "#,0",
+            "displayFolder": "Inventory",
+            "lineageTag": "b4cf07ee-9bf5-5030-b7d5-c5fb5b5b3b61"
+          },
+          {
+            "name": "Stockout rate",
+            "expression": "DIVIDE([Stockout SKU-days],COUNTROWS(Inventory))",
+            "formatString": "0.0%",
+            "displayFolder": "Inventory",
+            "lineageTag": "1dcc1c4b-74b7-5a80-babb-4b1a5e48947e"
+          },
+          {
+            "name": "Below safety SKU-days",
+            "expression": "SUM(Inventory[below_safety])",
+            "formatString": "#,0",
+            "displayFolder": "Inventory",
+            "lineageTag": "1fc30b5b-5885-5fcb-a9ea-2e7cf666a198"
+          },
+          {
+            "name": "Available units",
+            "expression": "VAR LastDate=MAX(Inventory[snapshot_date]) RETURN CALCULATE(SUM(Inventory[available_qty]),KEEPFILTERS(Inventory[snapshot_date]=LastDate))",
+            "formatString": "#,0",
+            "displayFolder": "Inventory",
+            "lineageTag": "a3b7ce28-8431-5212-b108-50bfe8777cd3"
+          },
+          {
+            "name": "Supplier OTIF",
+            "expression": "DIVIDE(CALCULATE(SUM('Supplier receipts'[supplier_otif]),'Supplier receipts'[due]=1),CALCULATE(COUNTROWS('Supplier receipts'),'Supplier receipts'[due]=1))",
+            "formatString": "0.0%",
+            "displayFolder": "Suppliers",
+            "lineageTag": "91bf8a1a-5885-5f08-92d5-08bebc9b3457"
+          },
+          {
+            "name": "Average supplier lead days",
+            "expression": "AVERAGE('Supplier receipts'[actual_lead_days])",
+            "formatString": "0.0",
+            "displayFolder": "Suppliers",
+            "lineageTag": "6ab7f85b-0a25-56e4-aa8c-a3f0ffdfc6ff"
+          },
+          {
+            "name": "Mean lead variance days",
+            "expression": "AVERAGE('Supplier receipts'[lead_variance_days])",
+            "formatString": "0.0",
+            "displayFolder": "Suppliers",
+            "lineageTag": "6dd5202c-0c71-5760-b9cc-d633bf8cf935"
+          },
+          {
+            "name": "Supplier lead standard deviation",
+            "expression": "STDEV.P('Supplier receipts'[actual_lead_days])",
+            "formatString": "0.0",
+            "displayFolder": "Suppliers",
+            "lineageTag": "1c720ad9-7dce-5820-a80a-a966348a0f15"
+          },
+          {
+            "name": "Demand units",
+            "expression": "SUM(Demand[demand_qty])",
+            "formatString": "#,0",
+            "displayFolder": "Forecasting",
+            "lineageTag": "8252a3c6-2d1b-5827-9b00-cfea46a74c25"
+          },
+          {
+            "name": "Forecast units",
+            "expression": "SUM(Forecasts[predicted_qty])",
+            "formatString": "#,0.0",
+            "displayFolder": "Forecasting",
+            "lineageTag": "951d17c5-d668-56bc-8317-6cc9c1a4e00b"
+          },
+          {
+            "name": "Forecast lower band",
+            "expression": "SUM(Forecasts[lower_qty])",
+            "formatString": "#,0.0",
+            "displayFolder": "Forecasting",
+            "lineageTag": "39db7fe0-b858-595b-addf-d8e3df302ba3"
+          },
+          {
+            "name": "Forecast upper band",
+            "expression": "SUM(Forecasts[upper_qty])",
+            "formatString": "#,0.0",
+            "displayFolder": "Forecasting",
+            "lineageTag": "41c71c39-4f01-5ed1-9fc9-f47de01ec8a0"
+          },
+          {
+            "name": "Backtest WAPE",
+            "expression": "DIVIDE(SUMX(Backtests,ABS(Backtests[predicted_qty]-Backtests[actual_qty])),SUM(Backtests[actual_qty]))",
+            "formatString": "0.0%",
+            "displayFolder": "Forecasting",
+            "lineageTag": "343cae30-666d-597f-8e62-34e8e12972da"
+          },
+          {
+            "name": "Backtest MAE",
+            "expression": "AVERAGEX(Backtests,ABS(Backtests[predicted_qty]-Backtests[actual_qty]))",
+            "formatString": "0.0",
+            "displayFolder": "Forecasting",
+            "lineageTag": "445acb8d-d589-5be0-bebd-81847a302984"
+          },
+          {
+            "name": "Backtest bias",
+            "expression": "DIVIDE(SUM(Backtests[predicted_qty])-SUM(Backtests[actual_qty]),SUM(Backtests[actual_qty]))",
+            "formatString": "0.0%",
+            "displayFolder": "Forecasting",
+            "lineageTag": "6ade1327-9798-5774-a0d4-ec7530d7b6f5"
+          },
+          {
+            "name": "Anomaly alerts",
+            "expression": "COUNTROWS(Anomalies)",
+            "formatString": "#,0",
+            "displayFolder": "Anomalies",
+            "lineageTag": "f0b59da1-b803-5c3e-8204-986c272f9f4f"
+          },
+          {
+            "name": "High severity alerts",
+            "expression": "CALCULATE(COUNTROWS(Anomalies),Anomalies[severity]=\"high\")",
+            "formatString": "#,0",
+            "displayFolder": "Anomalies",
+            "lineageTag": "9c1c7990-65e2-5e3a-a13f-3343183da95e"
+          },
+          {
+            "name": "Warehouse context",
+            "expression": "SELECTEDVALUE(Warehouse[warehouse_id],\"All authorized warehouses\")",
+            "formatString": "",
+            "displayFolder": "Context",
+            "lineageTag": "579879a6-f291-580a-b287-d4f7fdf1be80"
+          }
+        ]
+      },
+      {
+        "name": "UserWarehouse",
+        "isHidden": true,
+        "columns": [
+          {
+            "name": "upn",
+            "dataType": "string",
+            "sourceColumn": "upn"
+          },
+          {
+            "name": "warehouse_id",
+            "dataType": "string",
+            "sourceColumn": "warehouse_id"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "UserWarehouse",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "#table(type table [upn=text,warehouse_id=text],{{\"amer.analyst@example.com\",\"W01\"},{\"emea.analyst@example.com\",\"W02\"},{\"apac.analyst@example.com\",\"W03\"}})"
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "9d4c3654-efa1-54b2-b02a-74182a8fcea4",
+        "fromTable": "Orders",
+        "fromColumn": "warehouse_id",
+        "toTable": "Warehouse",
+        "toColumn": "warehouse_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "835add2f-8315-56e7-b784-1fe51ea11752",
+        "fromTable": "Inventory",
+        "fromColumn": "warehouse_id",
+        "toTable": "Warehouse",
+        "toColumn": "warehouse_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "6829a097-26d8-5cc5-8cd4-e37c3fa8a48e",
+        "fromTable": "Demand",
+        "fromColumn": "warehouse_id",
+        "toTable": "Warehouse",
+        "toColumn": "warehouse_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "c636dead-733c-5285-b183-f96a5e40ff58",
+        "fromTable": "Shipments",
+        "fromColumn": "warehouse_id",
+        "toTable": "Warehouse",
+        "toColumn": "warehouse_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "f70fa844-ad1c-5181-9850-6f8a95cba9f4",
+        "fromTable": "Supplier receipts",
+        "fromColumn": "warehouse_id",
+        "toTable": "Warehouse",
+        "toColumn": "warehouse_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "2b1f61f4-fb8a-51d0-8aa7-c4fea7b49b01",
+        "fromTable": "Forecasts",
+        "fromColumn": "warehouse_id",
+        "toTable": "Warehouse",
+        "toColumn": "warehouse_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "53f8ad04-7cfd-535a-9871-2e178b98c8e1",
+        "fromTable": "Backtests",
+        "fromColumn": "warehouse_id",
+        "toTable": "Warehouse",
+        "toColumn": "warehouse_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "0df8b601-88da-5206-be2f-7f8618bbeea4",
+        "fromTable": "Anomalies",
+        "fromColumn": "warehouse_id",
+        "toTable": "Warehouse",
+        "toColumn": "warehouse_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "e3ae8097-d8ea-5d51-8cc3-c8df4494c5c8",
+        "fromTable": "Inventory",
+        "fromColumn": "sku",
+        "toTable": "Product",
+        "toColumn": "sku",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "25615cff-a306-56fb-a50f-dc6304460f6a",
+        "fromTable": "Demand",
+        "fromColumn": "sku",
+        "toTable": "Product",
+        "toColumn": "sku",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "bd0f5ca9-1856-5495-b9e3-d155d0292d19",
+        "fromTable": "Shipments",
+        "fromColumn": "sku",
+        "toTable": "Product",
+        "toColumn": "sku",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "4ccd2cf8-5f86-52f2-8c52-72c284a38430",
+        "fromTable": "Supplier receipts",
+        "fromColumn": "sku",
+        "toTable": "Product",
+        "toColumn": "sku",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "88202d80-75df-5bc5-b47e-41c9b3c3e244",
+        "fromTable": "Forecasts",
+        "fromColumn": "sku",
+        "toTable": "Product",
+        "toColumn": "sku",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "88c44414-d243-5546-9591-fc4a234fe0b7",
+        "fromTable": "Backtests",
+        "fromColumn": "sku",
+        "toTable": "Product",
+        "toColumn": "sku",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "dae779a6-0197-5588-8886-b77c981b8b8e",
+        "fromTable": "Supplier receipts",
+        "fromColumn": "supplier_id",
+        "toTable": "Supplier",
+        "toColumn": "supplier_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "d8672e98-7e5c-5930-8205-75cb40654ee1",
+        "fromTable": "Orders",
+        "fromColumn": "promised_date",
+        "toTable": "Date",
+        "toColumn": "date_day",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "6a2f2d57-1d06-5bed-9920-f574cd7c7957",
+        "fromTable": "Inventory",
+        "fromColumn": "snapshot_date",
+        "toTable": "Date",
+        "toColumn": "date_day",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "f1e060fe-ad4d-5e39-9cee-cb29a8be794e",
+        "fromTable": "Demand",
+        "fromColumn": "date_day",
+        "toTable": "Date",
+        "toColumn": "date_day",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "11d4f157-2502-5c31-b201-57983d896b01",
+        "fromTable": "Shipments",
+        "fromColumn": "shipped_date",
+        "toTable": "Date",
+        "toColumn": "date_day",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "dab088f7-5668-56e5-9ddb-d4522548a301",
+        "fromTable": "Supplier receipts",
+        "fromColumn": "expected_date",
+        "toTable": "Date",
+        "toColumn": "date_day",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "b8ede84b-2b72-5008-afc1-82ffc5dac058",
+        "fromTable": "Backtests",
+        "fromColumn": "target_date",
+        "toTable": "Date",
+        "toColumn": "date_day",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "7d734a6a-8cef-514c-af78-41271a6d68ec",
+        "fromTable": "Anomalies",
+        "fromColumn": "date_day",
+        "toTable": "Date",
+        "toColumn": "date_day",
+        "crossFilteringBehavior": "oneDirection"
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DataFolder",
+        "kind": "m",
+        "expression": "\"C:\\supply-chain\\artifacts\" meta [IsParameterQuery=true,Type=\"Text\",IsParameterQueryRequired=true]"
+      },
+      {
+        "name": "UseRedshift",
+        "kind": "m",
+        "expression": "false meta [IsParameterQuery=true,Type=\"Logical\",IsParameterQueryRequired=true]"
+      },
+      {
+        "name": "RedshiftServer",
+        "kind": "m",
+        "expression": "\"YOUR_CLUSTER.region.redshift.amazonaws.com:5439\" meta [IsParameterQuery=true,Type=\"Text\",IsParameterQueryRequired=true]"
+      },
+      {
+        "name": "RedshiftDatabase",
+        "kind": "m",
+        "expression": "\"analytics\" meta [IsParameterQuery=true,Type=\"Text\",IsParameterQueryRequired=true]"
+      },
+      {
+        "name": "LoadMart",
+        "kind": "m",
+        "expression": "(tableName as text) as table =>\nlet\n Source = if UseRedshift then\n    let Connection=AmazonRedshift.Database(RedshiftServer,RedshiftDatabase),\n        Schema=Connection{[Name=\"analytics\",Kind=\"Schema\"]}[Data],\n        Fact=Schema{[Name=tableName,Kind=\"Table\"]}[Data]\n    in Fact\n else Table.PromoteHeaders(Csv.Document(File.Contents(DataFolder & \"/\" & tableName & \".csv\"),\n     [Delimiter=\",\",Encoding=65001,QuoteStyle=QuoteStyle.Csv]),[PromoteAllScalars=true]),\n Clean=Table.ReplaceValue(Source,\"\",null,Replacer.ReplaceValue,Table.ColumnNames(Source))\nin Clean"
+      }
+    ],
+    "roles": [
+      {
+        "name": "Warehouse Analyst",
+        "modelPermission": "read",
+        "tablePermissions": [
+          {
+            "name": "Warehouse",
+            "filterExpression": "CONTAINS(FILTER(UserWarehouse,UserWarehouse[upn]=USERPRINCIPALNAME()),UserWarehouse[warehouse_id],Warehouse[warehouse_id])"
+          },
+          {
+            "name": "UserWarehouse",
+            "filterExpression": "UserWarehouse[upn]=USERPRINCIPALNAME()"
+          }
+        ]
+      }
+    ]
+  }
+}

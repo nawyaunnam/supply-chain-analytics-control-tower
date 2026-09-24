@@ -1,0 +1,119 @@
+// Service
+Due orders =
+CALCULATE(COUNTROWS(Orders),Orders[due]=1)
+
+// Service
+OTIF orders =
+CALCULATE(SUM(Orders[otif]),Orders[due]=1)
+
+// Service
+OTIF =
+DIVIDE([OTIF orders],[Due orders])
+
+// Service
+First dispatch fill rate =
+DIVIDE(CALCULATE(SUM(Orders[first_dispatch_qty]),Orders[due]=1), CALCULATE(SUM(Orders[ordered_qty]),Orders[due]=1))
+
+// Service
+Open due orders =
+CALCULATE(COUNTROWS(Orders),FILTER(Orders,Orders[due]=1 && Orders[delivered_qty]<Orders[ordered_qty]))
+
+// Transport
+Transportation cost =
+SUM(Shipments[transport_cost])
+
+// Transport
+Cost per shipped unit =
+DIVIDE([Transportation cost],SUM(Shipments[shipped_qty]))
+
+// Transport
+Average transit days =
+AVERAGE(Shipments[transit_days])
+
+// Transport
+Transit day standard deviation =
+STDEV.P(Shipments[transit_days])
+
+// Inventory
+Ending inventory value =
+VAR LastDate=MAX(Inventory[snapshot_date]) RETURN CALCULATE(SUM(Inventory[inventory_value]),KEEPFILTERS(Inventory[snapshot_date]=LastDate))
+
+// Inventory
+Average daily inventory value =
+AVERAGEX(VALUES('Date'[date_day]),CALCULATE(SUM(Inventory[inventory_value])))
+
+// Inventory
+Period inventory turnover =
+DIVIDE(SUM(Inventory[shipped_cogs]),[Average daily inventory value])
+
+// Inventory
+Stockout SKU-days =
+SUM(Inventory[stockout])
+
+// Inventory
+Stockout rate =
+DIVIDE([Stockout SKU-days],COUNTROWS(Inventory))
+
+// Inventory
+Below safety SKU-days =
+SUM(Inventory[below_safety])
+
+// Inventory
+Available units =
+VAR LastDate=MAX(Inventory[snapshot_date]) RETURN CALCULATE(SUM(Inventory[available_qty]),KEEPFILTERS(Inventory[snapshot_date]=LastDate))
+
+// Suppliers
+Supplier OTIF =
+DIVIDE(CALCULATE(SUM('Supplier receipts'[supplier_otif]),'Supplier receipts'[due]=1),CALCULATE(COUNTROWS('Supplier receipts'),'Supplier receipts'[due]=1))
+
+// Suppliers
+Average supplier lead days =
+AVERAGE('Supplier receipts'[actual_lead_days])
+
+// Suppliers
+Mean lead variance days =
+AVERAGE('Supplier receipts'[lead_variance_days])
+
+// Suppliers
+Supplier lead standard deviation =
+STDEV.P('Supplier receipts'[actual_lead_days])
+
+// Forecasting
+Demand units =
+SUM(Demand[demand_qty])
+
+// Forecasting
+Forecast units =
+SUM(Forecasts[predicted_qty])
+
+// Forecasting
+Forecast lower band =
+SUM(Forecasts[lower_qty])
+
+// Forecasting
+Forecast upper band =
+SUM(Forecasts[upper_qty])
+
+// Forecasting
+Backtest WAPE =
+DIVIDE(SUMX(Backtests,ABS(Backtests[predicted_qty]-Backtests[actual_qty])),SUM(Backtests[actual_qty]))
+
+// Forecasting
+Backtest MAE =
+AVERAGEX(Backtests,ABS(Backtests[predicted_qty]-Backtests[actual_qty]))
+
+// Forecasting
+Backtest bias =
+DIVIDE(SUM(Backtests[predicted_qty])-SUM(Backtests[actual_qty]),SUM(Backtests[actual_qty]))
+
+// Anomalies
+Anomaly alerts =
+COUNTROWS(Anomalies)
+
+// Anomalies
+High severity alerts =
+CALCULATE(COUNTROWS(Anomalies),Anomalies[severity]="high")
+
+// Context
+Warehouse context =
+SELECTEDVALUE(Warehouse[warehouse_id],"All authorized warehouses")

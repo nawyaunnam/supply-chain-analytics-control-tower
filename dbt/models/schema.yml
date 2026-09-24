@@ -1,0 +1,50 @@
+version: 2
+models:
+- name: dim_supplier
+  columns:
+  - name: supplier_id
+    data_tests:
+    - unique
+    - not_null
+- name: dim_product
+  columns:
+  - name: sku
+    data_tests:
+    - unique
+    - not_null
+- name: dim_warehouse
+  columns:
+  - name: warehouse_id
+    data_tests:
+    - unique
+    - not_null
+- name: dim_date
+  columns:
+  - name: date_day
+    data_tests:
+    - unique
+    - not_null
+- name: fct_order_line
+  columns:
+  - name: line_id
+    data_tests:
+    - unique
+    - not_null
+- name: fct_order
+  columns:
+  - name: order_id
+    data_tests:
+    - unique
+    - not_null
+- name: fct_shipment
+  columns:
+  - name: shipment_id
+    data_tests:
+    - unique
+    - not_null
+- name: fct_supplier_receipt
+  columns:
+  - name: po_id
+    data_tests:
+    - unique
+    - not_null

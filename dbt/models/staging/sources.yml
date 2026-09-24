@@ -1,0 +1,15 @@
+version: 2
+sources:
+- name: raw
+  schema: raw
+  tables:
+  - name: suppliers
+  - name: products
+  - name: warehouses
+  - name: order_lines
+  - name: shipments
+  - name: inventory
+  - name: purchase_orders
+  - name: forecasts
+  - name: backtests
+  - name: anomalies

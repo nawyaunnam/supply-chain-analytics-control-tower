@@ -1,0 +1,15 @@
+{
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.0.0/schema.json": "fabric/item/report/definition/report/3.0.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/filterConfiguration/1.2.0/schema-embedded.json": "fabric/item/report/definition/filterConfiguration/1.2.0/schema-embedded.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/semanticQuery/1.3.0/schema.json": "fabric/item/report/definition/semanticQuery/1.3.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/formattingObjectDefinitions/1.4.0/schema.json": "fabric/item/report/definition/formattingObjectDefinitions/1.4.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.3.0/schema.json": "fabric/item/report/definition/bookmark/1.3.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/semanticQuery/1.2.0/schema.json": "fabric/item/report/definition/semanticQuery/1.2.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/formattingObjectDefinitions/1.3.0/schema.json": "fabric/item/report/definition/formattingObjectDefinitions/1.3.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json": "fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json": "fabric/item/report/definition/page/2.0.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json": "fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualConfiguration/2.2.0/schema-embedded.json": "fabric/item/report/definition/visualConfiguration/2.2.0/schema-embedded.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json": "fabric/item/report/definitionProperties/2.0.0/schema.json",
+  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json": "fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json"
+}

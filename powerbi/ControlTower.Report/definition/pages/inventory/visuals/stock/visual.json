@@ -1,0 +1,101 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "stock",
+  "position": {
+    "x": 20,
+    "y": 170,
+    "z": 0,
+    "height": 550,
+    "width": 750,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Product"
+                    }
+                  },
+                  "Property": "sku"
+                }
+              },
+              "queryRef": "0Values",
+              "nativeQueryRef": "sku"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Metrics"
+                    }
+                  },
+                  "Property": "Available units"
+                }
+              },
+              "queryRef": "1Values",
+              "nativeQueryRef": "Available units"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Metrics"
+                    }
+                  },
+                  "Property": "Stockout rate"
+                }
+              },
+              "queryRef": "2Values",
+              "nativeQueryRef": "Stockout rate"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Metrics"
+                    }
+                  },
+                  "Property": "Period inventory turnover"
+                }
+              },
+              "queryRef": "3Values",
+              "nativeQueryRef": "Period inventory turnover"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Stock availability and turnover'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

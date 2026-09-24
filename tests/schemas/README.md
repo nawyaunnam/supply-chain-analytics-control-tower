@@ -1,0 +1,1 @@
+Official Microsoft report schemas vendored from https://github.com/microsoft/json-schemas/tree/main/fabric/item/report on 2026-09-23. See LICENSE-Microsoft.txt. Used unchanged for offline PBIR validation. index.json maps their canonical URIs to local paths.

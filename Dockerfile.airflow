@@ -1,0 +1,13 @@
+FROM apache/airflow:3.3.2-python3.12
+USER root
+RUN mkdir -p /opt/project && chown airflow:root /opt/project
+COPY --chown=airflow:root pyproject.toml /opt/project/pyproject.toml
+COPY --chown=airflow:root src /opt/project/src
+COPY --chown=airflow:root dbt /opt/project/dbt
+COPY --chown=airflow:root dags /opt/airflow/dags
+USER airflow
+RUN python -m venv /opt/airflow/pipeline && /opt/airflow/pipeline/bin/pip install --no-cache-dir '/opt/project[cloud]'
+ENV PATH="/opt/airflow/pipeline/bin:${PATH}" TOWER_ROOT=/opt/project TOWER_TARGET=local
+WORKDIR /opt/project
+RUN mkdir -p data artifacts
+CMD ["airflow", "standalone"]

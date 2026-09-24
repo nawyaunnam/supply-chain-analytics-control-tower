@@ -1,0 +1,12 @@
+{
+  "name": "Supply Chain Control Tower",
+  "dataColors": [
+    "#18A886",
+    "#3977C4",
+    "#E6A84A",
+    "#DA6877"
+  ],
+  "background": "#F5F8FC",
+  "foreground": "#172D42",
+  "tableAccent": "#18A886"
+}

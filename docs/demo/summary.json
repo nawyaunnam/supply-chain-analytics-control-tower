@@ -1,0 +1,13 @@
+{
+  "dataset": "synthetic",
+  "as_of": "2025-08-28",
+  "due_orders": 696,
+  "otif": 0.1853448275862069,
+  "first_dispatch_fill_rate": 0.9066138272314737,
+  "stockout_sku_day_rate": 0.1439236111111111,
+  "order_lines": 3732,
+  "shipments": 4460,
+  "forecast_rows": 336,
+  "backtest_rows": 2016,
+  "anomalies": 660
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "accuracy",
+  "position": {
+    "x": 20,
+    "y": 420,
+    "z": 0,
+    "height": 300,
+    "width": 1240,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Backtests"
+                    }
+                  },
+                  "Property": "model"
+                }
+              },
+              "queryRef": "0Values",
+              "nativeQueryRef": "model"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Metrics"
+                    }
+                  },
+                  "Property": "Backtest WAPE"
+                }
+              },
+              "queryRef": "1Values",
+              "nativeQueryRef": "Backtest WAPE"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Metrics"
+                    }
+                  },
+                  "Property": "Backtest MAE"
+                }
+              },
+              "queryRef": "2Values",
+              "nativeQueryRef": "Backtest MAE"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Metrics"
+                    }
+                  },
+                  "Property": "Backtest bias"
+                }
+              },
+              "queryRef": "3Values",
+              "nativeQueryRef": "Backtest bias"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Rolling backtest comparison \u00b7 filter to one model before reading totals'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
